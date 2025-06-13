@@ -538,9 +538,7 @@ class MeterGroup(Electric):
 
     def __repr__(self):
         s = "{:s}(meters=\n".format(self.__class__.__name__)
-        for meter in self.meters:
-            s += "  " + str(meter).replace("\n", "\n  ") + "\n"
-        s += ")"
+        s += "\n".join(["  " + str(meter).replace("\n", "\n  ") for meter in self.meters]) + "\n)"
         return s
 
     @property
@@ -719,7 +717,7 @@ class MeterGroup(Electric):
             tz = None if start.tz is None else start.tz.zone
             index = pd.date_range(
                 start.tz_localize(None), section.end.tz_localize(None), tz=tz,
-                closed='left', freq=freq)
+                inclusive='left', freq=freq)
             chunk = combine_chunks_from_generators(
                 index, columns, self.meters, kwargs)
             yield chunk
